@@ -16,10 +16,6 @@ min_median_income = min(master_dict['Median_Income'].values())
 min_median_income_city = master_dict.get('Name').get(list(master_dict['Median_Income'].values()).index(min_median_income))
 min_median_income_zip = master_dict.get('ZIP').get(list(master_dict['Median_Income'].values()).index(min_median_income))
 
-#Printing Summary for Median_Income
-#print("The city with the highest median income is {}, zip code {}, with an income of ${}0.".format(max_median_income_city, max_median_income_zip, max_median_income))
-#print("The city with the lowest median income is {}, zip code {}, with an income of ${}0.".format(min_median_income_city, min_median_income_zip, min_median_income))
-
 #Repeating Process above for Median_Age
 max_median_age = max(master_dict['Median_Age'].values())
 min_median_age = min(master_dict['Median_Age'].values())
@@ -27,8 +23,6 @@ max_median_age_city = master_dict.get('Name').get(list(master_dict['Median_Age']
 min_median_age_city = master_dict.get('Name').get(list(master_dict['Median_Age'].values()).index(min_median_age))
 max_median_age_zip = master_dict.get('ZIP').get(list(master_dict['Median_Age'].values()).index(max_median_age))
 min_median_age_zip = master_dict.get('ZIP').get(list(master_dict['Median_Age'].values()).index(min_median_age))
-#print("The city with the highest median age is {}, zip code {}, with an age of {} years.".format(max_median_age_city, max_median_age_zip, max_median_age))
-#print("The city with the lowest median age is {}, zip code {}, with an age of {} years.".format(min_median_age_city, min_median_age_zip, min_median_age))
 
 #Finding given zip's percentile for health score
 your_zip = int(input("Enter ZIP:"))
@@ -42,11 +36,9 @@ health = {'Vintage': st.percentileofscore(master['Median_Age'], age_by_zip), "Me
 
 print("Vintage Score: {}\nMen's Vintage Score:{}\nWomen's Vintage Score:{}\nBrand Name Score:{}".format(health.get("Vintage"), health.get("Men's Vintage"), health.get("Women's Vintage"), health.get("Brand Name")))
 
-#Plotting Age v. Income data
+#Plotting Age v. Income data (This is unrelated to the project above, I was just curious about the relationship.)
 plt.scatter(master_dict['Median_Age'].values(),master_dict['Median_Income'].values(),marker = "D", alpha = 0.5)
 plt.xlabel("Median Age")
 plt.ylabel("Median Income (USD)")
 plt.title("Age vs. Income in Michigan")
 plt.show()
-
-
