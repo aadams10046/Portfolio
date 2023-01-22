@@ -1,5 +1,5 @@
 # Data Analyst Portfolio
-This project is meant to create a search function allowing the user to search the ZIP code of a thrift store and see the percentile scores of four categories of thrift shopping in that ZIP code.
+This ongoing project is meant to create a search function allowing the user to search the ZIP code of a thrift store and see the percentile scores of four categories of thrift shopping in that ZIP code. Functionality will be added to provide the user with a list of thrift stores in that ZIP and to rank all thrift stores by ZIP and health score.
 
 ## Technical Skills Utilized
 * Python
