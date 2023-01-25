@@ -8,11 +8,91 @@ This ongoing project is meant to create a search function allowing the user to s
 * Excel formulas and references (for creating the csv that the program uses)
 * Tableau Income and Age Maps available [here](https://public.tableau.com/app/profile/alexander.adams3449/viz/MichiganMaps/Income).
 
-## Notes
+## Process
 The data used for the initial .csv was pulled from Census.gov data collected in 2020. Some ZIP codes had no data collected for income or median age. In these cases I did one of two things: 
 1. If a city had two or more ZIPS that had data, I used the mean average of the other data points for that ZIP.
 2. Otherwise, I used the average of that column for the whole state.
 Since the point of the exercise was about finding the best thrift stores and scoring the thrift stores in a certain ZIP, this essentially removed these ZIPs with missing information from the "Best of" and "Worst of" lists and made their scores completely average. 
+
+I then used [APIFY's Google Maps Scraper] (https://console.apify.com/) to pull the list of all thrift stores and clothes resale shops in Michigan. I used all of this generated information to generate the count of all thrift stores after cleaning the scraper-generated data.
+Once this was complete I used SQL to join the business count and master list data. Once complete, I used this information to build the Tableau vizualizations linked above.
+
+## Full SQL Code Below
+```SQL
+CREATE TABLE "Full_Thrift_Store_List" (
+	"postal_code"	INTEGER,
+	"address"	TEXT,
+	"category_name"	TEXT,
+	"city"	TEXT,
+	"latitude"	REAL,
+	"longitude"	REAL,
+	"neighborhood"	TEXT,
+	"permanently_closed"	TEXT,
+	"phone"	TEXT,
+	"state"	TEXT,
+	"temporarily_closed"	TEXT,
+	"title"	TEXT,
+	"total_score"	REAL,
+	"website"	TEXT
+)
+
+CREATE TABLE "master_thrift_store" (
+	"Name"	TEXT,
+	"ZIP"	INTEGER,
+	"Median_Income"	INTEGER,
+	"Median_Age"	INTEGER,
+	"Median_Male_Age"	INTEGER,
+	"Median_Female_Age"	INTEGER
+)
+
+--Clean Out any non-Michigan ZIPs: There apparently are none
+
+SELECT * FROM Full_Thrift_Store_List
+WHERE postal_code NOT BETWEEN 48001 AND 49971;
+
+--Check for and clean out any permanently closed businesses: 24 businesses found and deleted
+SELECT * FROM Full_Thrift_Store_List
+WHERE permanently_closed = 'TRUE' OR temporarily_closed = 'TRUE';
+
+DELETE FROM Full_Thrift_Store_List WHERE permanently_closed = 'TRUE'  OR temporarily_closed = 'TRUE';
+
+--Look at list of unique business types
+SELECT DISTINCT(category_name) AS 'Unique Categories List'  FROM Full_Thrift_Store_List;
+
+--Check for and clean out any non-thrift stores: removed 1005 businesses
+SELECT * FROM Full_Thrift_Store_List
+WHERE category_name NOT IN ('Thrift store', 'Charity', 'Second hand store', 'Non-profit organization', 'Donations center', 'Used clothing store', 'Clothes market') OR category_name IS NULL;
+
+DELETE FROM Full_Thrift_Store_List 
+WHERE category_name NOT IN ('Thrift store', 'Charity', 'Second hand store', 'Non-profit organization', 'Donations center', 'Used clothing store', 'Clothes market') OR category_name IS NULL;
+
+--Clean data so that all state codes are 'MI'
+SELECT COUNT(*) AS 'Count of MI State Code' FROM Full_Thrift_Store_List WHERE state <> 'MI'
+
+UPDATE Full_Thrift_Store_List
+SET state = CASE
+	WHEN state <> 'MI' THEN 'MI'
+END
+
+--Count all businesses by ZIP and join that table to Master List for use in Data_Boy.py
+SELECT postal_code,
+COUNT(*) AS Business_Count
+FROM Full_Thrift_Store_List
+GROUP BY 1
+ORDER BY 2 DESC;
+
+CREATE TABLE "Business_Count_by_ZIP" (
+	"postal_code"	INTEGER,
+	"Business_Count"	INTEGER
+)
+
+--JOIN business count and ZIP list on ID ZIP
+SELECT master_thrift_store.*,  Business_Count_by_ZIP.*
+FROM master_thrift_store
+JOIN Business_Count_by_ZIP
+ON master_thrift_store.ZIP = Business_Count_by_ZIP.postal_code
+ORDER BY ZIP;
+```
 
 ## Full Python Code Below
 ```python
