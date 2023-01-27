@@ -6,9 +6,9 @@ This ongoing project is meant to create a search function allowing the user to s
 ## Technical Skills Utilized
 * Python
 * Data Visualization using matplotlib, and seaborn (examples in files) 
-* Data analysis using pandas, numpy, and scipy.stats.
-* Excel formulas and references (for creating the csv that the program uses)
-* Tableau Income and Age Maps available [here](https://public.tableau.com/app/profile/alexander.adams3449).
+* Data analysis using pandas, numpy, and scipy.stats
+* Excel formulas and references (for creating the csv that the program uses, including XLOOKUPs and substring functions)
+* Tableau Income and Age Maps available [here](https://public.tableau.com/app/profile/alexander.adams3449)
 
 ## Process
 The data used for [master_thrift_store.csv](https://github.com/aadams10046/Thrift-Store-Python-Project/blob/main/master_thrift_store.csv) was pulled from Census.gov data collected in 2020. Some ZIP codes had no data collected for income or median age. In these cases I did one of two things: 
