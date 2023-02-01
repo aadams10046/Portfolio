@@ -72,6 +72,7 @@ def graph_med_age_sns():
 
 #Function for creating Best of List and printing it
 def best_of(characteristic):
+    global master
     characteristic = characteristic.lower()
     if characteristic == 'vintage':
         master = master.sort_values(['Median_Age'],axis = 0, ascending = [False], inplace = False)
@@ -91,6 +92,7 @@ def best_of(characteristic):
 
 #Function for creating Worst of List and printing it
 def worst_of(characteristic):
+    global master
     characteristic = characteristic.lower()
     if characteristic == 'vintage':
         master = master.sort_values(['Median_Age'],axis = 0, ascending = [True], inplace = False)
